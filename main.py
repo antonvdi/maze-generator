@@ -4,22 +4,13 @@ import pygame
 
 pygame.init()
 
-width = int(input("Width?\n"))
-height = int(input("Height?\n"))
+grid = []
 
-if width < 50:
-	width = 50
-elif width > 3000:
-	width = 3000
-if height < 50:
-	height = 50
-elif height > 3000:
-	height = 3000
-
+width = 800
+height = 800
 
 screen = pygame.display.set_mode((width, height))
 clock = pygame.time.Clock()
-
 
 def GameLoop():
 	done = False
@@ -35,8 +26,9 @@ def GameLoop():
 		pygame.display.flip()
 		clock.tick(60)
 
+
 def RecursiveBacktracking(x, y):
-	
+
 
 	
 
