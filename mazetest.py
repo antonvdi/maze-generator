@@ -1,27 +1,36 @@
-from random import shuffle, randrange
- 
-def make_maze(w = 16, h = 8):
-    vis = [[0] * w + [1] for _ in range(h)] + [[1] * (w + 1)]
-    ver = [["|  "] * w + ['|'] for _ in range(h)] + [[]]
-    hor = [["+--"] * w + ['+'] for _ in range(h + 1)]
- 
-    def walk(x, y):
-        vis[y][x] = 1
- 
-        d = [(x - 1, y), (x, y + 1), (x + 1, y), (x, y - 1)]
-        shuffle(d)
-        for (xx, yy) in d:
-            if vis[yy][xx]: continue
-            if xx == x: hor[max(y, yy)][x] = "+  "
-            if yy == y: ver[y][max(x, xx)] = "   "
-            walk(xx, yy)
- 
-    walk(randrange(w), randrange(h))
- 
-    s = ""
-    for (a, b) in zip(hor, ver):
-        s += ''.join(a + ['\n'] + b + ['\n'])
-    return s
- 
-if __name__ == '__main__':
-    print(make_maze())
+
+
+
+N = 4
+
+def printSolution (sol):
+
+    for i in sol:
+        for j in i:
+            print (str(j) + " ", end = " ")
+        print("")
+
+
+def IsGoodMove (maze, x, y):
+    if x > 0 and x < N and y > N and y < N and maze[x][y] == 1:
+        return True
+    else:
+        return False
+
+
+def SolveMaze (maze):
+    sol = [ [ 0 for j in range(10)] for i in range(10) ]
+
+    if solveMazeUtil(maze, 0, 0, sol) == False:
+        print("Løsning findes ikke")
+        return False
+
+    printSolution(sol)
+    return True
+
+def solveMazeUtil(maze, x, y, sol):
+    if x == N - 1 and y == N - 1:
+        sol[x][y] = 1
+        return True
+
+    if IsGoodMove
