@@ -7,24 +7,24 @@ from random import randint
 
 pygame.init()
 
-maze_width = 17
-maze_height = 17
+maze_width = 7
+maze_height = 7
 
 screen = pygame.display.set_mode((maze_width * 10, maze_height * 10))
 clock = pygame.time.Clock()
 
 maze = [[0 for i in range(maze_width)] for j in range(maze_height)]
 
-class current:  
-    def __init__(self):  
-        self.x = 4
-        self.y = 4   
+class current(object):  
+    x = 1
+    y = 1
+    def __init__(self, x, y):
+    	self.x = x
+    	self.y = y
 
 def GameLoop():
 	done = False
 
-	current.x = 1
-	current.y = 1
 	maze[current.x][current.y] = 1
 	
 	while not done:
@@ -66,7 +66,7 @@ def CheckAdjacent(direction_possible):
 		print(e)
 
 	try:
-		if current.x + 2 <= maze_width and maze[current.x-2][current.y] == 0: #east
+		if current.x + 2 <= maze_width and maze[current.x+2][current.y] == 0: #east
 			direction_possible[2] = True
 	except:
 		print(e)
