@@ -35,16 +35,12 @@ def GameLoop():
 			if event.type == pygame.QUIT:
 				done = True
 		
+		backwards = False
 		direction_possible = [False, False, False, False]
-		CheckAdjacent(direction_possible)
+		CheckAdjacent(direction_possible, backwards)
 
-		while True not in direction_possible:
-			if current.x == x_start and current.y == y_start:
-				print(maze)
-				done = True
-				sys.exit()
-			else:
-				Backtrack()
+		if True not in direction_possible:
+			backwards = True
 
 		go = False
 		while go == False:	#find en bedre måde at gøre det her på...
@@ -58,61 +54,33 @@ def GameLoop():
 		clock.tick(600)
 
 
-def CheckAdjacent(direction_possible):
+def CheckAdjacent(direction_possible, backwards):
 	try:
-		if maze[current.x][current.y-2] == 0: #north
+		if maze[current.x][current.y-2] == backwards: #north
 			direction_possible[0] = True
 	except IndexError:
 		pass
 
 	try:
-		if maze[current.x][current.y+2] == 0: #south
+		if maze[current.x][current.y+2] == backwards: #south
 			direction_possible[1] = True
 	except IndexError:
 		pass
 
 	try:
-		if maze[current.x+2][current.y] == 0: #east
+		if maze[current.x+2][current.y] == backwards: #east
 			direction_possible[2] = True
 	except IndexError:
 		pass
 
 	try:
-		if maze[current.x-2][current.y] == 0: #west
+		if maze[current.x-2][current.y] == backwards: #west
 			direction_possible[3] = True
 	except IndexError:
 		pass
 
 	return direction_possible 
 
-def Backtrack():
-	try:
-		if maze[current.x][current.y-2] == 1:
-			current.y -= 2
-			print('backtracked')
-	except IndexError:
-		pass
-
-	try:
-		if maze[current.x][current.y+2] == 1:
-			current.y += 2
-			print('backtracked')
-	except IndexError:
-		pass
-
-	try:
-		if maze[current.x+2][current.y] == 1:
-			current.x += 2
-			print('backtracked')
-	except IndexError:
-		pass
-
-	try:
-		if maze[current.x-2][current.y] == 1:
-			current.x -= 2
-			print('backtracked')
-	except IndexError:
-		pass
 
 def MoveRandom(random_value):
 	if random_value == 0:
