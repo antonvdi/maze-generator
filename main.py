@@ -15,9 +15,12 @@ clock = pygame.time.Clock()
 
 maze = [[0 for i in range(maze_width)] for j in range(maze_height)]
 
+x_start = 1
+y_start = 1
+
 class current(object):  
-    x = 1
-    y = 1
+    x = x_start
+    y = y_start
     def __init__(self, x, y):
     	self.x = x
     	self.y = y
@@ -32,104 +35,102 @@ def GameLoop():
 			if event.type == pygame.QUIT:
 				done = True
 		
-		RecursiveBacktracking()
-		print(maze)
+		direction_possible = [False, False, False, False]
+		CheckAdjacent(direction_possible)
+
+		while True not in direction_possible:
+			if current.x == x_start and current.y == y_start:
+				print(maze)
+				done = True
+				sys.exit()
+			else:
+				Backtrack()
+
+		go = False
+		while go == False:	#find en bedre måde at gøre det her på...
+			random_value = randint(0, 3)
+			if direction_possible[random_value] == True:
+				go = True
+
+		MoveRandom(random_value)
 
 		pygame.display.flip()
 		clock.tick(600)
 
-def RecursiveBacktracking():
-	direction_possible = [False, False, False, False]
-	CheckAdjacent(direction_possible)
-
-	go = False
-	while go == False:	#find en bedre måde at gøre det her på...
-		random_value = randint(0, 3)
-		if direction_possible[random_value] == True:
-			go = True
-
-	MoveRandom(random_value)
-
 
 def CheckAdjacent(direction_possible):
-	e = "Not a possible move"
 	try:
-		if current.y - 2 >= 0 and maze[current.x][current.y-2] == 0: #north
+		if maze[current.x][current.y-2] == 0: #north
 			direction_possible[0] = True
-	except:
-		print(e)
+	except IndexError:
+		pass
 
 	try:
-		if current.y + 2 <= maze_height and maze[current.x][current.y+2] == 0: #south
+		if maze[current.x][current.y+2] == 0: #south
 			direction_possible[1] = True
-	except:
-		print(e)
+	except IndexError:
+		pass
 
 	try:
-		if current.x + 2 <= maze_width and maze[current.x+2][current.y] == 0: #east
+		if maze[current.x+2][current.y] == 0: #east
 			direction_possible[2] = True
-	except:
-		print(e)
+	except IndexError:
+		pass
 
 	try:
-		if current.x - 2 >= 0 and maze[current.x-2][current.y] == 0: #west
+		if maze[current.x-2][current.y] == 0: #west
 			direction_possible[3] = True
-	except:
-		print(e)
+	except IndexError:
+		pass
 
-	if True not in direction_possible:
-		sys.exit()
-		#Backtrack()
-	if True in direction_possible:
-		return direction_possible
+	return direction_possible 
 
 def Backtrack():
-	e = "No possible backtrack"
-	n = 2
 	try:
-		if maze[current.x][current.y-n] == 1:
-			current.y -= n
-			RecursiveBacktracking()
-		elif maze[current.x][current.y+n] == 1:
-			current.y += n
-			RecursiveBacktracking()
-		elif maze[current.x+n][current.y] == 1:
-			current.x += n
-			RecursiveBacktracking()
-		elif maze[current.x-n][current.y] == 1:
-			current.x -= n
-			RecursiveBacktracking()
-		else:
-			print(maze)
-			sys.exit()
-	except:
-		print(e)
+		if maze[current.x][current.y-2] == 1:
+			current.y -= 2
+			print('backtracked')
+	except IndexError:
+		pass
 
+	try:
+		if maze[current.x][current.y+2] == 1:
+			current.y += 2
+			print('backtracked')
+	except IndexError:
+		pass
+
+	try:
+		if maze[current.x+2][current.y] == 1:
+			current.x += 2
+			print('backtracked')
+	except IndexError:
+		pass
+
+	try:
+		if maze[current.x-2][current.y] == 1:
+			current.x -= 2
+			print('backtracked')
+	except IndexError:
+		pass
 
 def MoveRandom(random_value):
 	if random_value == 0:
 		for i in range(2):
 			current.y -= 1
 			maze[current.x][current.y] = 1
-
-		print("Moved North")
 	elif random_value == 1:
 		for i in range(2):
 			current.y += 1
 			maze[current.x][current.y] = 1
-
-		print("Moved South")
 	elif random_value == 2:
 		for i in range(2):
 			current.x += 1
 			maze[current.x][current.y] = 1
-
-		print("Moved East")
 	elif random_value == 3:
 		for i in range(2):
 			current.x -= 1
 			maze[current.x][current.y] = 1
-
-		print("Moved West")
+	print('moved')
 
 GameLoop()
