@@ -7,8 +7,8 @@ from random import randint
 
 pygame.init()
 
-maze_width = 7
-maze_height = 7
+maze_width = 17
+maze_height = 17
 
 screen = pygame.display.set_mode((maze_width * 10, maze_height * 10))
 clock = pygame.time.Clock()
@@ -108,25 +108,25 @@ def Backtrack():
 
 def MoveRandom(random_value):
 	if random_value == 0:
-		for i in range(0, 1):
+		for i in range(2):
 			current.y -= 1
 			maze[current.x][current.y] = 1
 
 		print("Moved North")
 	elif random_value == 1:
-		for i in range(0, 1):
+		for i in range(2):
 			current.y += 1
 			maze[current.x][current.y] = 1
 
 		print("Moved South")
 	elif random_value == 2:
-		for i in range(0, 1):
+		for i in range(2):
 			current.x += 1
 			maze[current.x][current.y] = 1
 
 		print("Moved East")
 	elif random_value == 3:
-		for i in range(0, ):
+		for i in range(2):
 			current.x -= 1
 			maze[current.x][current.y] = 1
 
