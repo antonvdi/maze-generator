@@ -14,6 +14,9 @@ maze_height = 99
 white = (255, 255, 255)
 black = (0, 0, 0)
 
+white = (255, 255, 255)
+black = (0, 0, 0)
+
 screen = pygame.display.set_mode((maze_width * 10, maze_height * 10))
 clock = pygame.time.Clock()
 
@@ -99,8 +102,7 @@ def CheckAdjacent(direction_possible, backwards):
 
 	return direction_possible 
 
-
-def MoveRandom(random_value):
+def MoveRandom(random_value,):
 	if random_value == 0:
 		for i in range(2):
 			current.y -= 1
