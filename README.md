@@ -7,16 +7,26 @@ Varibel navne med små bogstaver på engelsk, fx: velocity
 Funktions navn med title case på engelsk, fx: CalculateVelocity()
 
 # Brainstorm
-ASCII generator \n
-Facial recognition \n 
+ASCII generator
+
+Facial recognition
+
 2048
+
 OS
+
 Pi calculator
+
 Sudoku incl. solver
+
 Anagram: https://ordnet.dk/underholdning/krasser
+
 Sorting algorithms
+
 Encryption
+
 Komprimering
+
 Maze generator/solver
 
 # Tema
