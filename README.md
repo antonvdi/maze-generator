@@ -7,8 +7,8 @@ Varibel navne med små bogstaver på engelsk, fx: velocity
 Funktions navn med title case på engelsk, fx: CalculateVelocity()
 
 # Brainstorm
-ASCII generator
-Facial recognition 
+ASCII generator \n
+Facial recognition \n 
 2048
 OS
 Pi calculator
