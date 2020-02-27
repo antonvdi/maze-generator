@@ -18,7 +18,7 @@ black = (0, 0, 0)
 red = (255, 0, 0)
 
 screen = pygame.display.set_mode((maze_width * tile_size, maze_height * tile_size))
-clock = pygame.time.Clock()
+#clock = pygame.time.Clock()
 
 maze = [[0 for i in range(maze_height)] for j in range(maze_width)]
 path = []
@@ -39,6 +39,8 @@ def GenerateMaze():
 	maze[current.x][current.y] = 1
 	screen.fill(black)
 	pygame.draw.rect(screen, white, [current.x*tile_size, current.y*tile_size, tile_size, tile_size])
+	start_time = time.time()
+	max_len = 0
 	
 	while not done:
 		for event in pygame.event.get():
@@ -48,6 +50,11 @@ def GenerateMaze():
 			RecursiveBacktracking()
 			if len(path) == 0:
 				game_over = True
+				print("runtime: " + str(time.time() - start_time))
+				print("max length: " + str(max_len))
+				print(str((time.time() - start_time)/(maze_height*maze_width)))
+			if len(path) > max_len:
+				max_len = len(path)
 
 def RecursiveBacktracking():
 	backwards = False
