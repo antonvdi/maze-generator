@@ -10,22 +10,16 @@ import random
 os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (0,25)
 pygame.init()
 
-maze_width = int(input("Maze width:\n"))
-maze_height = int(input("Maze height:\n"))
-tile_size = int(input("Maze tile size\n"))
-
-if maze_width % 2 == 0:
-	maze_width += 1
-if maze_height % 2 == 0:
-	maze_height += 1
+maze_width = 0
+maze_height = 0
+tile_size = 0
 
 white = (255, 255, 255)
 black = (0, 0, 0)
 red = (255, 0, 0)
 
-screen = pygame.display.set_mode((maze_width * tile_size, maze_height * tile_size))
+screen = pygame.display.set_mode((500, 500))
 
-maze = [[0 for i in range(maze_height)] for j in range(maze_width)] #generer bitmap
 path = []
 
 x_start = 1
@@ -38,36 +32,63 @@ class current(object):
     	self.x = x
     	self.y = y
 
-def GenerateMaze():
+def Main():
 	done = False
+	generatemaze = input("Type 'generate'")
+
+	screen.fill(black) #resetter skærmen
+
+	while not done:
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				done = True
+		if generatemaze == "generate":
+			GenerateMaze()
+
+def GenerateMaze():
+	InitDisplay()
+
 	game_over = False
 
+	while game_over == False:
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				done = True
+
+		RecursiveBacktracking()
+		pygame.display.flip()
+		pygame.event.pump() #for at undgå timeout
+
+		if len(path) == 0:
+			print("runtime: " + str(time.time() - start_time))
+			game_over = True
+
+def InitDisplay():
+	start_time = time.time() #starter clock
+
+	maze_width = int(input("Maze width:\n"))
+	maze_height = int(input("Maze height:\n"))
+	tile_size = int(input("Maze tile size\n"))
+
+	if maze_width % 2 == 0:
+		maze_width += 1
+	if maze_height % 2 == 0:
+		maze_height += 1
+
+	screen = pygame.display.set_mode((maze_width * tile_size, maze_height * tile_size))
+
+	maze = [[0 for i in range(maze_height)] for j in range(maze_width)] #generer bitmap
 	maze[current.x][current.y] = 1
 	maze[1][0] = 2
 	maze[maze_width-2][maze_height-1] = 2 #indstiller start og slut for maze
-
-	screen.fill(black) #resetter skærmen
 
 	for i in range(maze_width): # tegner mazen som den ser ud til at begynde med
 		for j in range(maze_height):
 			if maze[i][j] == 1:
 				pygame.draw.rect(screen, white, [i*tile_size, j*tile_size, tile_size, tile_size])
+
 			if maze[i][j] == 2:
 				pygame.draw.rect(screen, red, [i*tile_size, j*tile_size, tile_size, tile_size])
-
-	start_time = time.time() #starter clock
-	
-	while not done:
-		for event in pygame.event.get():
-			if event.type == pygame.QUIT:
-				done = True
-		while game_over == False:
-			RecursiveBacktracking()
-			pygame.display.flip()
-			pygame.event.pump() #for at undgå timeout
-			if len(path) == 0:
-				print("runtime: " + str(time.time() - start_time))
-				game_over = True
 
 def RecursiveBacktracking():
 	backwards = False
@@ -150,4 +171,4 @@ def MoveRandom(random_value):
 			maze[current.x][current.y] = 1
 			pygame.draw.rect(screen, white, [current.x*tile_size, current.y*tile_size, tile_size, tile_size])
 
-GenerateMaze()
+Main()
