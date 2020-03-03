@@ -5,6 +5,7 @@
 import pygame
 import sys, time, os
 from random import randint
+import random
 
 os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (0,25)
 pygame.init()
@@ -40,53 +41,51 @@ class current(object):
 def GenerateMaze():
 	done = False
 	game_over = False
+
 	maze[current.x][current.y] = 1
-	maze[1][0] = 1
-	maze[maze_width-2][maze_height-1] = 1
+	maze[1][0] = 2
+	maze[maze_width-2][maze_height-1] = 2
 
 	screen.fill(black)
+
 	for i in range(maze_width):
 		for j in range(maze_height):
 			if maze[i][j] == 1:
 				pygame.draw.rect(screen, white, [i*tile_size, j*tile_size, tile_size, tile_size])
+			if maze[i][j] == 2:
+				pygame.draw.rect(screen, red, [i*tile_size, j*tile_size, tile_size, tile_size])
 
 	start_time = time.time()
-	max_len = 0
 	
 	while not done:
 		for event in pygame.event.get():
-			if event.type == pygame.QUIT:
-				done = True
+				if event.type == pygame.QUIT:
+					done = True
 		while game_over == False:
 			RecursiveBacktracking()
+			pygame.display.flip()
+			pygame.event.pump() #for at undgå timeout
 			if len(path) == 0:
 				game_over = True
 				print("runtime: " + str(time.time() - start_time))
-				print("max length: " + str(max_len))
-				print(str((time.time() - start_time)/(maze_height*maze_width)))
-			if len(path) > max_len:
-				max_len = len(path)
 
 def RecursiveBacktracking():
 	backwards = False
+
 	direction_possible = [False, False, False, False]
+
 	CheckAdjacent(direction_possible)
 
 	if True not in direction_possible:
 		backwards = True
 		Backtrace(direction_possible)
-
-	go = False
-	while go == False:	#find en bedre måde at gøre det her på...
-		random_value = randint(0, 3)
-		if direction_possible[random_value] == True:
-			if backwards == False:
-				path.append(random_value)
-			go = True
 			
+	for i in range(len(direction_possible)):
+		if direction_possible[i] == False:
+			direction_possible.pop(i)
+	random_value = random.choice(direction_possible)
+
 	MoveRandom(random_value)
-	pygame.display.flip()
-	pygame.event.pump() #for at undgå timeout
 
 def CheckAdjacent(direction_possible):
 	try:
