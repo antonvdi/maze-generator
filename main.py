@@ -14,9 +14,9 @@ maze_width = int(input("Maze width:\n"))
 maze_height = int(input("Maze height:\n"))
 tile_size = int(input("Maze tile size\n"))
 
-if maze_width % 2 != 1:
+if maze_width % 2 == 0:
 	maze_width += 1
-if maze_height % 2 != 1:
+if maze_height % 2 == 0:
 	maze_height += 1
 
 white = (255, 255, 255)
@@ -25,7 +25,7 @@ red = (255, 0, 0)
 
 screen = pygame.display.set_mode((maze_width * tile_size, maze_height * tile_size))
 
-maze = [[0 for i in range(maze_height)] for j in range(maze_width)]
+maze = [[0 for i in range(maze_height)] for j in range(maze_width)] #generer bitmap
 path = []
 
 x_start = 1
@@ -44,30 +44,30 @@ def GenerateMaze():
 
 	maze[current.x][current.y] = 1
 	maze[1][0] = 2
-	maze[maze_width-2][maze_height-1] = 2
+	maze[maze_width-2][maze_height-1] = 2 #indstiller start og slut for maze
 
-	screen.fill(black)
+	screen.fill(black) #resetter skærmen
 
-	for i in range(maze_width):
+	for i in range(maze_width): # tegner mazen som den ser ud til at begynde med
 		for j in range(maze_height):
 			if maze[i][j] == 1:
 				pygame.draw.rect(screen, white, [i*tile_size, j*tile_size, tile_size, tile_size])
 			if maze[i][j] == 2:
 				pygame.draw.rect(screen, red, [i*tile_size, j*tile_size, tile_size, tile_size])
 
-	start_time = time.time()
+	start_time = time.time() #starter clock
 	
 	while not done:
 		for event in pygame.event.get():
-				if event.type == pygame.QUIT:
-					done = True
+			if event.type == pygame.QUIT:
+				done = True
 		while game_over == False:
 			RecursiveBacktracking()
 			pygame.display.flip()
 			pygame.event.pump() #for at undgå timeout
 			if len(path) == 0:
-				game_over = True
 				print("runtime: " + str(time.time() - start_time))
+				game_over = True
 
 def RecursiveBacktracking():
 	backwards = False
@@ -80,10 +80,13 @@ def RecursiveBacktracking():
 		backwards = True
 		Backtrace(direction_possible)
 			
-	for i in range(len(direction_possible)):
-		if direction_possible[i] == False:
-			direction_possible.pop(i)
-	random_value = random.choice(direction_possible)
+	go = False
+	while go == False:
+		random_value = randint(0, 3)
+		if direction_possible[random_value] == True:
+			if backwards == False:
+				path.append(random_value)
+			go = True
 
 	MoveRandom(random_value)
 
