@@ -20,6 +20,7 @@ red = (255, 0, 0)
 
 screen = pygame.display.set_mode((500, 500))
 
+maze = [[]] #generer bitmap
 path = []
 
 x_start = 1
@@ -43,11 +44,12 @@ def Main():
 			if event.type == pygame.QUIT:
 				done = True
 		if generatemaze == "generate":
+			generatemaze = ""
+			InitDisplay()
 			GenerateMaze()
 
 def GenerateMaze():
-	InitDisplay()
-
+	start_time = time.time() #starter clock
 	game_over = False
 
 	while game_over == False:
@@ -64,7 +66,10 @@ def GenerateMaze():
 			game_over = True
 
 def InitDisplay():
-	start_time = time.time() #starter clock
+	global maze 
+	global maze_width
+	global maze_height
+	global tile_size
 
 	maze_width = int(input("Maze width:\n"))
 	maze_height = int(input("Maze height:\n"))
@@ -76,7 +81,7 @@ def InitDisplay():
 		maze_height += 1
 
 	screen = pygame.display.set_mode((maze_width * tile_size, maze_height * tile_size))
-
+	
 	maze = [[0 for i in range(maze_height)] for j in range(maze_width)] #generer bitmap
 	maze[current.x][current.y] = 1
 	maze[1][0] = 2
@@ -135,6 +140,7 @@ def CheckAdjacent(direction_possible):
 			direction_possible[3] = True
 	except IndexError:
 		pass
+
 	return direction_possible 
 
 def Backtrace(direction_possible):
