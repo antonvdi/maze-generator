@@ -1,36 +1,69 @@
+import pygame
+import random
 
 
 
-N = 4
+WIDTH = 600
+HEIGHT = 600
+FPS = 60
 
-def printSolution (sol):
+# Define Colors 
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+BLUE = (0, 0, 255)
 
-    for i in sol:
-        for j in i:
-            print (str(j) + " ", end = " ")
-        print("")
+## initialize pygame and create window
+pygame.init()
+pygame.mixer.init()  ## For sound
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Fuck this shite")
+clock = pygame.time.Clock()     ## For syncing the FPS
 
 
-def IsGoodMove (maze, x, y):
-    if x > 0 and x < N and y > N and y < N and maze[x][y] == 1:
-        return True
-    else:
-        return False
+def game_intro():
+
+    intro = True
+
+    while intro:
+        for event in pygame.event.get():
+            #print(event)
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+                
+        gameDisplay.fill(white)
+        largeText = pygame.font.Font('freesansbold.ttf',115)
+        TextSurf, TextRect = text_objects("A bit Racey", largeText)
+        TextRect.center = ((display_width/2),(display_height/2))
+        gameDisplay.blit(TextSurf, TextRect)
 
 
-def SolveMaze (maze):
-    sol = [ [ 0 for j in range(10)] for i in range(10) ]
+        mouse = pygame.mouse.get_pos()
 
-    if solveMazeUtil(maze, 0, 0, sol) == False:
-        print("Løsning findes ikke")
-        return False
+        #print(mouse)
 
-    printSolution(sol)
-    return True
+        if 150+100 > mouse[0] > 150 and 450+50 > mouse[1] > 450:
+            pygame.draw.rect(gameDisplay, bright_green,(150,450,100,50))
+        else:
+            pygame.draw.rect(gameDisplay, green,(150,450,100,50))
+        pygame.draw.rect(gameDisplay, red,(550,450,100,50))
+        pygame.display.update()
+        clock.tick(15)
 
-def solveMazeUtil(maze, x, y, sol):
-    if x == N - 1 and y == N - 1:
-        sol[x][y] = 1
-        return True
+## Game loop
+running = True
+while running:
 
-    if IsGoodMove
+    #1 Process input/events
+    clock.tick(FPS)     ## will make the loop run at the same speed all the time
+    for event in pygame.event.get():        # gets all the events which have occured till now and keeps tab of them.
+        ## listening for the the X button at the top
+        if event.type == pygame.QUIT:
+            running = False
+
+
+    pygame.display.flip()       
+
+# pygame.quit()
