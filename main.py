@@ -3,12 +3,13 @@
 # cd C:\Users\Mathias Laptop\Documents\GitHub\pro_eks
 
 import pygame
-import sys, time, os
+import time, os
 from random import randint
-import random
 
 os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (0,25)
 pygame.init()
+pygame.font.init()
+myfont = pygame.font.SysFont('Trebuchet MS', 30)
 
 maze_width = 0
 maze_height = 0
@@ -18,9 +19,9 @@ white = (255, 255, 255)
 black = (0, 0, 0)
 red = (255, 0, 0)
 
-screen = pygame.display.set_mode((500, 500))
+screen = pygame.display.set_mode((700, 700))
 
-maze = [[]] #generer bitmap
+maze = [[]] #initialiserer bitmap
 path = []
 
 x_start = 1
@@ -35,16 +36,18 @@ class current(object):
 
 def Main():
 	done = False
-	generatemaze = input("Type 'generate'")
+	generatemaze = False
 
-	screen.fill(black) #resetter skærmen
+	textsurface = myfont.render('Maze Generator', False, white)
+	screen.blit(textsurface,(0,0))
+	pygame.display.flip()
 
 	while not done:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				done = True
-		if generatemaze == "generate":
-			generatemaze = ""
+		if generatemaze == True:
+			generatemaze = False
 			InitDisplay()
 			GenerateMaze()
 
