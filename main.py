@@ -5,11 +5,13 @@
 import pygame
 import time, os
 from random import randint
+from text import text_to_screen
 
 os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (0,25)
 pygame.init()
 pygame.font.init()
-myfont = pygame.font.SysFont('Trebuchet MS', 30)
+title_font = pygame.font.Font("freesansbold.ttf", 50)
+font = pygame.font.Font("freesansbold.ttf", 24)
 
 maze_width = 0
 maze_height = 0
@@ -38,18 +40,35 @@ def Main():
 	done = False
 	generatemaze = False
 
-	textsurface = myfont.render('Maze Generator', False, white)
-	screen.blit(textsurface,(0,0))
+	title = DrawText("Generate Maze", 30)
+	
 	pygame.display.flip()
-
+	mpos = (0,0)
+	
 	while not done:
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
 				done = True
+			if event.type == pygame.MOUSEBUTTONUP:
+				mpos = pygame.mouse.get_pos()
+
+		if title.collidepoint(mpos):
+			generatemaze = True
+			mpos = (0, 0)
 		if generatemaze == True:
 			generatemaze = False
 			InitDisplay()
 			GenerateMaze()
+		pygame.event.pump() #for at undgå timeout
+
+def DrawText(text, offset_y):
+	title = font.render(text, True, (255, 255, 255))
+	titleRect = title.get_rect()
+	titleRect.centerx = screen.get_rect().centerx
+	titleRect.centery = offset_y
+	screen.blit(title, titleRect)
+
+	return titleRect
 
 def GenerateMaze():
 	start_time = time.time() #starter clock
