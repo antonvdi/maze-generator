@@ -5,7 +5,6 @@
 import pygame
 import time, os
 from random import randint
-from text import text_to_screen
 
 os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (0,25)
 pygame.init()
@@ -38,9 +37,10 @@ class current(object):
 
 def Main():
 	done = False
-	generatemaze = False
+	genandexport = False
 
-	title = DrawText("Generate Maze", 30)
+	title = DrawText("Generate Maze and Export as Image", 30)
+	title1 = DrawText("Generate and Solve with DFS", 90)
 	
 	pygame.display.flip()
 	mpos = (0,0)
@@ -53,12 +53,13 @@ def Main():
 				mpos = pygame.mouse.get_pos()
 
 		if title.collidepoint(mpos):
-			generatemaze = True
+			genandexport = True
 			mpos = (0, 0)
-		if generatemaze == True:
-			generatemaze = False
+		if genandexport == True:
+			genandexport = False
 			InitDisplay()
 			GenerateMaze()
+			pygame.image.save(screen, "mazes/maze.png")
 		pygame.event.pump() #for at undgå timeout
 
 def DrawText(text, offset_y):
@@ -94,8 +95,11 @@ def InitDisplay():
 	global tile_size
 
 	maze_width = int(input("Maze width:\n"))
+	pygame.event.pump()
 	maze_height = int(input("Maze height:\n"))
+	pygame.event.pump()
 	tile_size = int(input("Maze tile size\n"))
+	pygame.event.pump()
 
 	if maze_width % 2 == 0:
 		maze_width += 1
