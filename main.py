@@ -8,13 +8,15 @@ from random import randint
 
 os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (0,25) #start position for vinduet
 pygame.init()
-pygame.font.init() #initialiserer pygame og pygame font
-title_font = pygame.font.Font("freesansbold.ttf", 50) #vælger title font
-font = pygame.font.Font("freesansbold.ttf", 24) #vælger font
 
-maze_width = 3
-maze_height = 3
-tile_size = 1 #startværdier for variable
+maze_width = int(input("Maze width:\n"))
+maze_height = int(input("Maze height:\n"))
+tile_size = int(input("Maze tile size\n"))
+
+if maze_width % 2 == 0:
+	maze_width += 1
+if maze_height % 2 == 0:
+	maze_height += 1
 
 white = (255, 255, 255)
 black = (0, 0, 0)
@@ -33,49 +35,42 @@ class current(object):
     	self.y = y #når der initialiseres, indstilles current objektet til (1, 1)
 
 def Main():
-	global maze_width
-	global maze_height
 	done = False
-	mpos = (0,0)
+	generated = False
 
-	title = DrawText("Generate Maze and Export as Image", 30)
-	title1 = DrawText("Generate and Solve with DFS", 90)
-	maze_size = DrawText(str(maze_width) + "x" + str(maze_height), 600)
-	maze_width_increase = DrawText("+1 width", 550)
-	maze_height_increase = DrawText("+1 height", 650)
-	
 	while not done: #når programmet ikke er færdigt...
 		for event in pygame.event.get(): #eventhandling
 			if event.type == pygame.QUIT: #hvis der trykkes x er programmet færdigt
 				done = True
-			if event.type == pygame.MOUSEBUTTONUP: #hvis der trykkes på musen, skal mpos() opdateres
-				mpos = pygame.mouse.get_pos()
 
-		if title.collidepoint(mpos): #hvis title-teksten kolliderer med mpos(), så generer og eksporter et maze
-			InitDisplay()
-			GenerateMaze()
-			pygame.image.save(screen, "mazes/maze.png")
-			mpos = (0, 0) #reset mpos
-		if maze_width_increase.collidepoint(mpos): #hvis der trykkes +1 maze width, så forøg maze width, opdater tekst og opdater mpos
-			maze_width += 1
-			mpos = (0, 0)
-			maze_size = DrawText(str(maze_width) + "x" + str(maze_height), 600)
-		if maze_height_increase.collidepoint(mpos):
-			maze_height += 1
-			mpos = (0, 0)
-			maze_size = DrawText(str(maze_width) + "x" + str(maze_height), 600)
-			
-		pygame.display.update() 
-		pygame.event.pump() #for at undgå timeout
+			if generated == False:
+				InitDisplay() #klargører display og genererer tomt bitmap i rigtig størrelse
+				GenerateMaze() #generer hele mazen
+				pygame.image.save(screen, "mazes/maze.png") #gemmer mazen som en png fil i en under mappe, der hvor filen er placeret
+				generated = True
+			elif event.type == pygame.KEYDOWN and event.key == pygame.K_r:
+					generated = False
 
-def DrawText(text, offset_y):
-	title = font.render(text, True, (255, 255, 255))
-	titleRect = title.get_rect()
-	titleRect.centerx = screen.get_rect().centerx
-	titleRect.centery = offset_y
-	screen.blit(title, titleRect)
+def InitDisplay():
+	global maze 
+	global maze_width
+	global maze_height
+	global tile_size
 
-	return titleRect
+	screen = pygame.display.set_mode((maze_width * tile_size, maze_height * tile_size))
+	
+	maze = [[0 for i in range(maze_height)] for j in range(maze_width)] #generer bitmap
+	maze[current.x][current.y] = 1 
+	maze[1][0] = 2 #indstiller start og slut for maze
+	maze[maze_width-2][maze_height-1] = 2 
+
+	for i in range(maze_width): # tegner mazen som den ser ud til at begynde med
+		for j in range(maze_height):
+			if maze[i][j] == 1:
+				pygame.draw.rect(screen, white, [i*tile_size, j*tile_size, tile_size, tile_size])
+
+			if maze[i][j] == 2:
+				pygame.draw.rect(screen, red, [i*tile_size, j*tile_size, tile_size, tile_size])
 
 def GenerateMaze():
 	start_time = time.time() #starter clock
@@ -86,48 +81,16 @@ def GenerateMaze():
 			if event.type == pygame.QUIT:
 				done = True
 
-		RecursiveBacktracking()
+		NextStep()
 		pygame.display.flip()
 		pygame.event.pump() #for at undgå timeout
 
-		if len(path) == 0:
-			print("runtime: " + str(time.time() - start_time))
+		if len(path) == 0: #tjek om programmet er færdig med at generere
+			print("Runtime: " + str(time.time() - start_time))
+			print("Finished. Press 'R' to run again")
 			game_over = True
 
-def InitDisplay():
-	global maze 
-	global maze_width
-	global maze_height
-	global tile_size
-
-	maze_width = int(input("Maze width:\n"))
-	pygame.event.pump()
-	maze_height = int(input("Maze height:\n"))
-	pygame.event.pump()
-	tile_size = int(input("Maze tile size\n"))
-	pygame.event.pump()
-
-	if maze_width % 2 == 0:
-		maze_width += 1
-	if maze_height % 2 == 0:
-		maze_height += 1
-
-	screen = pygame.display.set_mode((maze_width * tile_size, maze_height * tile_size))
-	
-	maze = [[0 for i in range(maze_height)] for j in range(maze_width)] #generer bitmap
-	maze[current.x][current.y] = 1
-	maze[1][0] = 2
-	maze[maze_width-2][maze_height-1] = 2 #indstiller start og slut for maze
-
-	for i in range(maze_width): # tegner mazen som den ser ud til at begynde med
-		for j in range(maze_height):
-			if maze[i][j] == 1:
-				pygame.draw.rect(screen, white, [i*tile_size, j*tile_size, tile_size, tile_size])
-
-			if maze[i][j] == 2:
-				pygame.draw.rect(screen, red, [i*tile_size, j*tile_size, tile_size, tile_size])
-
-def RecursiveBacktracking():
+def NextStep():
 	backwards = False
 
 	direction_possible = [False, False, False, False]
@@ -149,7 +112,7 @@ def RecursiveBacktracking():
 	MoveRandom(random_value)
 
 def CheckAdjacent(direction_possible):
-	try:
+	try: #hvis der kommer en index error, kan current positionen ikke bevæge sig i den pågældende retning. derfor fortsætter den med næste check
 		if current.y-2 >= 0 and maze[current.x][current.y-2] == 0: #north
 			direction_possible[0] = True
 	except IndexError:
@@ -176,7 +139,9 @@ def CheckAdjacent(direction_possible):
 	return direction_possible 
 
 def Backtrace(direction_possible):
-	if path[-1] == 0:
+	#path listen indeholder alle de retninger current har bevæget sig. index '-1' er den sidste position i listen.
+	# 0 = nord, 1 = syd, 2 = øst, 3 = vest. 
+	if path[-1] == 0: 
 		direction_possible[1] = True
 	elif path[-1] == 1:
 		direction_possible[0] = True
