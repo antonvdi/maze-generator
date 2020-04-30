@@ -6,60 +6,66 @@ import pygame
 import time, os
 from random import randint
 
-os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (0,25)
+os.environ['SDL_VIDEO_WINDOW_POS'] = "%d,%d" % (0,25) #start position for vinduet
 pygame.init()
-pygame.font.init()
-title_font = pygame.font.Font("freesansbold.ttf", 50)
-font = pygame.font.Font("freesansbold.ttf", 24)
+pygame.font.init() #initialiserer pygame og pygame font
+title_font = pygame.font.Font("freesansbold.ttf", 50) #vælger title font
+font = pygame.font.Font("freesansbold.ttf", 24) #vælger font
 
-maze_width = 0
-maze_height = 0
-tile_size = 0
+maze_width = 3
+maze_height = 3
+tile_size = 1 #startværdier for variable
 
 white = (255, 255, 255)
 black = (0, 0, 0)
-red = (255, 0, 0)
+red = (255, 0, 0) #definerer farver
 
-screen = pygame.display.set_mode((700, 700))
+screen = pygame.display.set_mode((700, 700)) #definerer screen skærmen
 
-maze = [[]] #initialiserer bitmap
-path = []
-
-x_start = 1
-y_start = 1
+maze = [[]] #definerer bitmap
+path = [] #definerer en tom liste, der indeholder vejen som programmet har bevæget
 
 class current(object):  
-    x = x_start
-    y = y_start
+    x = 1
+    y = 1
     def __init__(self, x, y):
     	self.x = x
-    	self.y = y
+    	self.y = y #når der initialiseres, indstilles current objektet til (1, 1)
 
 def Main():
+	global maze_width
+	global maze_height
 	done = False
-	genandexport = False
+	mpos = (0,0)
 
 	title = DrawText("Generate Maze and Export as Image", 30)
 	title1 = DrawText("Generate and Solve with DFS", 90)
+	maze_size = DrawText(str(maze_width) + "x" + str(maze_height), 600)
+	maze_width_increase = DrawText("+1 width", 550)
+	maze_height_increase = DrawText("+1 height", 650)
 	
-	pygame.display.flip()
-	mpos = (0,0)
-	
-	while not done:
-		for event in pygame.event.get():
-			if event.type == pygame.QUIT:
+	while not done: #når programmet ikke er færdigt...
+		for event in pygame.event.get(): #eventhandling
+			if event.type == pygame.QUIT: #hvis der trykkes x er programmet færdigt
 				done = True
-			if event.type == pygame.MOUSEBUTTONUP:
+			if event.type == pygame.MOUSEBUTTONUP: #hvis der trykkes på musen, skal mpos() opdateres
 				mpos = pygame.mouse.get_pos()
 
-		if title.collidepoint(mpos):
-			genandexport = True
-			mpos = (0, 0)
-		if genandexport == True:
-			genandexport = False
+		if title.collidepoint(mpos): #hvis title-teksten kolliderer med mpos(), så generer og eksporter et maze
 			InitDisplay()
 			GenerateMaze()
 			pygame.image.save(screen, "mazes/maze.png")
+			mpos = (0, 0) #reset mpos
+		if maze_width_increase.collidepoint(mpos): #hvis der trykkes +1 maze width, så forøg maze width, opdater tekst og opdater mpos
+			maze_width += 1
+			mpos = (0, 0)
+			maze_size = DrawText(str(maze_width) + "x" + str(maze_height), 600)
+		if maze_height_increase.collidepoint(mpos):
+			maze_height += 1
+			mpos = (0, 0)
+			maze_size = DrawText(str(maze_width) + "x" + str(maze_height), 600)
+			
+		pygame.display.update() 
 		pygame.event.pump() #for at undgå timeout
 
 def DrawText(text, offset_y):
