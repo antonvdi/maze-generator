@@ -49,7 +49,7 @@ def Main():
 				pygame.image.save(screen, "mazes/maze.png") #gemmer mazen som en png fil i en under mappe, der hvor filen er placeret
 				generated = True
 			elif event.type == pygame.KEYDOWN and event.key == pygame.K_r:
-					generated = False
+				generated = False
 
 def InitDisplay():
 	global maze 
