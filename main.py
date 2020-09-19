@@ -1,7 +1,3 @@
-# cd C:\Users\Anton\Documents\GitHub\pro_eks
-# cd C:\Users\anton_mc03yx6\Documents\GitHub\pro_eks
-# cd C:\Users\Mathias Laptop\Documents\GitHub\pro_eks
-
 import pygame
 import time, os
 from random import randint
@@ -39,8 +35,8 @@ def Main():
 	generated = False
 
 	while not done: #når programmet ikke er færdigt...
-		for event in pygame.event.get(): #eventhandling
-			if event.type == pygame.QUIT: #hvis der trykkes x er programmet færdigt
+		for event in pygame.event.get(): #event-handling
+			if event.type == pygame.QUIT: #hvis der trykkes 'x' er programmet færdigt
 				done = True
 
 			if generated == False:
