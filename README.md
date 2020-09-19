@@ -1,34 +1,5 @@
-# pro_eks
 HTX årg. 17/20. Programmering C eksamen sommer 2020, m. Anton Irvold og Mathias Engmark
 Skrives i Python 3.8.1
 
-# Notation
-Varibel navne med små bogstaver på engelsk, fx: velocity
-Funktions navn med title case på engelsk, fx: CalculateVelocity()
-
-# Brainstorm
-ASCII generator
-
-Facial recognition
-
-2048
-
-OS
-
-Pi calculator
-
-Sudoku incl. solver
-
-Anagram: https://ordnet.dk/underholdning/krasser
-
-Sorting algorithms
-
-Encryption
-
-Komprimering
-
-Maze generator/solver
-
-# Tema
-Maze-generator
-evt. med 
+# Brief introduction
+This project uses Depth First Search (DFS) to generate a custom, random maze with an exit and entry point. The walls and tracks have a custom and common width. The algorithm shows the generation process on the screen, rendering it using the Pygame library, and export the maze to a folder (/mazes). The algorithm is implemented using a stack, and the program is written in Python 3.8.1. 
